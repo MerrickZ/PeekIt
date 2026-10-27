@@ -1,0 +1,17 @@
+# PeekIt Features Worklog
+
+#### [2026-10-27 11:24] • [FEAT-001] • [Проектирование / Разработка]
+- **Цель:** Добавить китайский (zh) язык интерфейса и убрать захардкоженные русские строки (issues #4, #6).
+- **Выполненные действия:**
+  - Зарегистрирован FEAT-001 в `features/featurelist.md`.
+  - Начата реализация: `types.ts`, `i18n.ts` (блок zh + новые ключи), SettingsModal, +page.svelte, GenericPreview, PluginHost, PluginsTab, plugins.svelte.ts.
+- **Статус:** In Progress
+
+#### [2026-10-27 11:45] • [FEAT-001] • [Завершено]
+- **Цель:** Финализация FEAT-001.
+- **Выполненные действия:**
+  - Добавлен блок переводов `zh` в `src/lib/i18n.ts` + новые ключи для всех трёх языков.
+  - `AppLanguage` расширен значением `'zh'`; в SettingsModal добавлена опция «中文 (ZH)».
+  - Убраны захардкоженные русские строки: `+page.svelte`, `GenericPreview.svelte`, `PluginHost.svelte`, `PluginsTab.svelte`, `plugins.svelte.ts` — заменены на `t(key, lang)`.
+- **Тестирование:** `npm run check` — 0 errors; `npm run build` — успешно.
+- **Статус:** [Завершено]

@@ -3,6 +3,7 @@
   import { invoke, convertFileSrc } from '@tauri-apps/api/core';
   import type { PluginInfo, FilePreviewInfo, AppTheme, AppLanguage } from '$lib/types';
   import type { HostToPluginMessage, PluginToHostMessage } from '$lib/plugins/protocol';
+  import { t } from '$lib/i18n';
 
   interface Props {
     plugin: PluginInfo;
@@ -63,7 +64,7 @@
         const uint8 = new Uint8Array(raw);
         buffer = uint8.buffer;
       } else {
-        throw new Error('Некорректный формат бинарных данных от хоста');
+        throw new Error('Invalid binary data format from host');
       }
 
       sendToPlugin(
@@ -179,7 +180,7 @@
     <div class="plugin-error-banner">
       <div class="error-icon">⚠️</div>
       <div class="error-info">
-        <div class="error-title">Ошибка плагина "{plugin.manifest.name}"</div>
+        <div class="error-title">{t('plugin_error', language)} "{plugin.manifest.name}"</div>
         <div class="error-desc">{errorMessage}</div>
       </div>
     </div>

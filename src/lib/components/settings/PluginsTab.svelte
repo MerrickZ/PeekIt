@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import type { AppLanguage, RegistryPlugin, PluginInfo } from '$lib/types';
   import { t } from '$lib/i18n';
+  import type { TranslationKey } from '$lib/i18n';
   import { pluginRegistry } from '$lib/stores/plugins.svelte';
   import { open } from '@tauri-apps/plugin-dialog';
 
@@ -103,7 +104,7 @@
           installMessage = `${t('plugins_installed_success', lang)} (${info.manifest.name})`;
           setTimeout(() => { installMessage = ''; }, 4000);
         } catch (e: any) {
-          installError = e?.toString() || 'Ошибка установки';
+          installError = e?.toString() || t('install_failed', lang);
           setTimeout(() => { installError = ''; }, 5000);
         }
       }
@@ -134,7 +135,7 @@
       if (fileInput) {
         fileInput.click();
       } else {
-        installError = e?.toString() || 'Ошибка установки';
+        installError = e?.toString() || t('install_failed', lang);
         setTimeout(() => { installError = ''; }, 5000);
       }
     }
@@ -155,7 +156,7 @@
       installMessage = `${t('plugins_installed_success', lang)} (${info.manifest.name})`;
       setTimeout(() => { installMessage = ''; }, 4000);
     } catch (e: any) {
-      installError = e?.message || e?.toString() || 'Ошибка установки';
+      installError = e?.message || e?.toString() || t('install_failed', lang);
       setTimeout(() => { installError = ''; }, 6000);
     } finally {
       installingPluginId = null;
@@ -167,10 +168,10 @@
       await pluginRegistry.uninstallPlugin(id);
       await refreshInstalled();
       confirmingUninstallId = null;
-      installMessage = lang === 'ru' ? `Плагин «${name}» удален` : `Plugin "${name}" uninstalled`;
+      installMessage = `${t('plugin_uninstalled', lang)}: ${name}`;
       setTimeout(() => { installMessage = ''; }, 4000);
     } catch (e: any) {
-      installError = e?.message || e?.toString() || 'Ошибка удаления плагина';
+      installError = e?.message || e?.toString() || t('uninstall_failed', lang);
       setTimeout(() => { installError = ''; }, 5000);
     }
   }
@@ -189,15 +190,15 @@
     return { isInstalled: true, hasUpdate, installedVersion: installed.manifest.version };
   }
 
-  const categories = [
-    { id: 'all', labelRu: 'Все', labelEn: 'All' },
-    { id: 'graphics', labelRu: 'Графика', labelEn: 'Graphics' },
-    { id: '3d', labelRu: '3D', labelEn: '3D' },
-    { id: 'documents', labelRu: 'Документы', labelEn: 'Documents' },
-    { id: 'fonts', labelRu: 'Шрифты', labelEn: 'Fonts' },
-    { id: 'spreadsheets', labelRu: 'Таблицы', labelEn: 'Sheets' },
-    { id: 'presentations', labelRu: 'Презентации', labelEn: 'Presentations' },
-    { id: 'utilities', labelRu: 'Утилиты', labelEn: 'Utilities' },
+  const categories: { id: string; key: TranslationKey }[] = [
+    { id: 'all', key: 'cat_all' },
+    { id: 'graphics', key: 'cat_graphics' },
+    { id: '3d', key: 'cat_graphics' },
+    { id: 'documents', key: 'cat_documents' },
+    { id: 'fonts', key: 'cat_fonts' },
+    { id: 'spreadsheets', key: 'cat_spreadsheets' },
+    { id: 'presentations', key: 'cat_presentations' },
+    { id: 'utilities', key: 'cat_utilities' },
   ];
 
   function getEffectiveCategory(plugin: RegistryPlugin): string {
@@ -232,21 +233,21 @@
   function getCategoryLabel(category: string, currentLang: AppLanguage): string {
     switch (category) {
       case 'graphics':
-        return currentLang === 'ru' ? 'ГРАФИКА' : 'GRAPHICS';
+        return t('cat_graphics', currentLang);
       case '3d':
         return '3D';
       case 'documents':
-        return currentLang === 'ru' ? 'ДОКУМЕНТЫ' : 'DOCS';
+        return t('cat_documents', currentLang);
       case 'fonts':
-        return currentLang === 'ru' ? 'ШРИФТЫ' : 'FONTS';
+        return t('cat_fonts', currentLang);
       case 'spreadsheets':
-        return currentLang === 'ru' ? 'ТАБЛИЦЫ' : 'SHEETS';
+        return t('cat_spreadsheets', currentLang);
       case 'presentations':
-        return currentLang === 'ru' ? 'ПРЕЗЕНТАЦИИ' : 'SLIDES';
+        return t('cat_presentations', currentLang);
       case 'utilities':
-        return currentLang === 'ru' ? 'УТИЛИТЫ' : 'UTILS';
+        return t('cat_utilities', currentLang);
       default:
-        return currentLang === 'ru' ? 'ПЛАГИН' : 'PLUGIN';
+        return t('cat_plugin', currentLang);
     }
   }
 
@@ -375,7 +376,7 @@
                 <polyline points="23 4 23 10 17 10" />
                 <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
               </svg>
-              <span>{lang === 'ru' ? 'Обновить' : 'Refresh'}</span>
+              <span>{t('plugins_refresh', lang)}</span>
             </button>
           </div>
         </div>
@@ -417,14 +418,14 @@
                       <button
                         class="btn-confirm-delete"
                         on:click={() => handleUninstallPlugin(plugin.manifest.id, plugin.manifest.name)}
-                        title={lang === 'ru' ? 'Подтвердить удаление' : 'Confirm delete'}
+                        title={t('confirm_delete', lang)}
                       >
-                        {lang === 'ru' ? 'Удалить?' : 'Delete?'}
+                        {t('delete_q', lang)}
                       </button>
                       <button
                         class="btn-cancel-delete"
                         on:click={() => (confirmingUninstallId = null)}
-                        title={lang === 'ru' ? 'Отмена' : 'Cancel'}
+                        title={t('cancel', lang)}
                       >
                         &times;
                       </button>
@@ -433,7 +434,7 @@
                     <button
                       class="btn-uninstall-plugin"
                       on:click={() => (confirmingUninstallId = plugin.manifest.id)}
-                      title={lang === 'ru' ? 'Удалить плагин' : 'Uninstall plugin'}
+                      title={t('uninstall_plugin', lang)}
                     >
                       <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="3 6 5 6 21 6" />
@@ -442,7 +443,7 @@
                     </button>
                   {/if}
 
-                  <label class="switch" title={plugin.isEnabled ? (lang === 'ru' ? 'Отключить' : 'Disable') : (lang === 'ru' ? 'Включить' : 'Enable')}>
+                  <label class="switch" title={plugin.isEnabled ? t('disable_plugin', lang) : t('enable_plugin', lang)}>
                     <input
                       type="checkbox"
                       checked={plugin.isEnabled}
@@ -500,7 +501,7 @@
               class="cat-pill {selectedCategory === cat.id ? 'active' : ''}"
               on:click={() => (selectedCategory = cat.id)}
             >
-              {lang === 'ru' ? cat.labelRu : cat.labelEn}
+              {t(cat.key, lang)}
             </button>
           {/each}
         </div>
@@ -521,7 +522,7 @@
             </svg>
             <p>{catalogError}</p>
             <button class="action-btn primary" on:click={loadCatalog}>
-              <span>{lang === 'ru' ? 'Повторить попытку' : 'Retry'}</span>
+              <span>{t('retry', lang)}</span>
             </button>
           </div>
         {:else if filteredCatalog.length === 0}

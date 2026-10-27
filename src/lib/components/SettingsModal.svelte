@@ -128,6 +128,7 @@
             <select id="setting-language" bind:value={localSettings.language} class="setting-select">
               <option value="ru">Русский (RU)</option>
               <option value="en">English (EN)</option>
+              <option value="zh">中文 (ZH)</option>
             </select>
           </div>
 

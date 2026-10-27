@@ -359,13 +359,13 @@
     <div class="actions-toolbar">
       {#if fileGroup.length > 1}
         <div class="group-carousel-nav">
-          <button class="carousel-nav-btn" on:click={prevGroupItem} title="Предыдущий файл (← / ↑)">
+          <button class="carousel-nav-btn" on:click={prevGroupItem} title={t('prev_file', settings.language)}>
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5">
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
           <span class="group-counter">{groupIndex + 1} / {fileGroup.length}</span>
-          <button class="carousel-nav-btn" on:click={nextGroupItem} title="Следующий файл (→ / ↓)">
+          <button class="carousel-nav-btn" on:click={nextGroupItem} title={t('next_file', settings.language)}>
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5">
               <polyline points="9 18 15 12 9 6" />
             </svg>

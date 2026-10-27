@@ -96,7 +96,7 @@ class PluginRegistry {
         console.warn(`[PluginRegistry] Failed to fetch catalog from ${u}:`, err);
       }
     }
-    throw new Error('Каталог плагинов временно недоступен в сети');
+    throw new Error('Plugin catalog is temporarily unavailable');
   }
 
   async installPluginFromUrl(downloadUrl: string, expectedSha256?: string, fallbackUrls: string[] = []): Promise<PluginInfo> {
@@ -113,12 +113,12 @@ class PluginRegistry {
 
         const contentType = response.headers.get('content-type') || '';
         if (contentType.includes('text/html')) {
-          throw new Error('Файл не найден (404)');
+          throw new Error('File not found (404)');
         }
 
         const arrayBuffer = await response.arrayBuffer();
         if (arrayBuffer.byteLength < 50) {
-          throw new Error('Некорректный размер пакета');
+          throw new Error('Invalid package size');
         }
 
         // Verify SHA-256
@@ -129,7 +129,7 @@ class PluginRegistry {
           const targetSha = expectedSha256.trim().toLowerCase();
 
           if (computedSha !== targetSha) {
-            lastMismatchDetails = `Ожидалось: ${targetSha.slice(0, 10)}..., получено: ${computedSha.slice(0, 10)}...`;
+            lastMismatchDetails = `Expected: ${targetSha.slice(0, 10)}..., got: ${computedSha.slice(0, 10)}...`;
             console.warn(`[PluginRegistry] SHA-256 mismatch for ${url}:`, { targetSha, computedSha });
             continue; // Try next candidate URL
           }
@@ -147,9 +147,9 @@ class PluginRegistry {
     }
 
     if (lastMismatchDetails) {
-      throw new Error(`Контрольная сумма SHA-256 не совпадает! (${lastMismatchDetails})`);
+      throw new Error(`SHA-256 checksum mismatch! (${lastMismatchDetails})`);
     }
-    throw new Error(lastError?.message || 'Не удалось загрузить пакет плагина');
+    throw new Error(lastError?.message || 'Failed to download plugin package');
   }
 }
 

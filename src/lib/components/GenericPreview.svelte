@@ -47,10 +47,10 @@
       </div>
       {#if file.extra?.folderStats}
         <div class="meta-item full">
-          <span class="meta-label">{lang === 'ru' ? 'Содержимое (1-й уровень)' : 'Contents (1st level)'}</span>
+          <span class="meta-label">{t('folder_contents', lang)}</span>
           <span class="meta-val">
-            {file.extra.folderStats.fileCount + file.extra.folderStats.folderCount} {lang === 'ru' ? 'элементов' : 'items'}
-            ({file.extra.folderStats.fileCount} {lang === 'ru' ? 'файлов' : 'files'}, {file.extra.folderStats.folderCount} {lang === 'ru' ? 'папок' : 'folders'})
+            {file.extra.folderStats.fileCount + file.extra.folderStats.folderCount} {t('items', lang)}
+            ({file.extra.folderStats.fileCount} {t('files_word', lang)}, {file.extra.folderStats.folderCount} {t('folders_word', lang)})
           </span>
         </div>
       {:else}
