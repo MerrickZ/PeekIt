@@ -152,6 +152,13 @@
             <label for="stayOnTop">{t('stay_on_top', localSettings.language)}</label>
           </div>
 
+          <div class="setting-item-check">
+            <input type="checkbox" id="borderlessMode" bind:checked={localSettings.borderlessMode} />
+            <label for="borderlessMode" title={t('borderless_mode_desc', localSettings.language)}>
+              {t('borderless_mode', localSettings.language)}
+            </label>
+          </div>
+
           <div class="hotkeys-box">
             <h4>{t('hotkeys_title', localSettings.language)}</h4>
             <ul>

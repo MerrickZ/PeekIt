@@ -4,7 +4,7 @@
 |----|---------|--------|--------|------|
 | FEAT-001 | Chinese (zh) UI language + complete i18n (remove hardcoded RU strings) | Completed | kobaltgit/PeekIt#4, #6 | 2026-10-27 |
 | FEAT-002 | PDF preview: continuous scroll (infinite scroll paging) | Completed | kobaltgit/PeekIt#5 | 2026-10-27 |
-| FEAT-003 | Borderless preview window (content-only mode) | Pending | kobaltgit/PeekIt#3 | 2026-10-27 |
+| FEAT-003 | Borderless preview window (content-only mode) | Completed | kobaltgit/PeekIt#3 | 2026-10-27 |
 
 ---
 

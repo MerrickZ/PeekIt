@@ -144,6 +144,10 @@ export const translations = {
     cat_presentations: 'ПРЕЗЕНТАЦИИ',
     cat_utilities: 'УТИЛИТЫ',
     cat_plugin: 'ПЛАГИН',
+    borderless_mode: 'Безрамочный режим (только содержимое)',
+    borderless_mode_desc: 'Скрыть верхнюю панель и строку состояния',
+    enter_borderless: 'Безрамочное окно',
+    exit_borderless: 'Выйти из безрамочного режима',
   },
   en: {
     app_title: 'Peekit',
@@ -288,6 +292,10 @@ export const translations = {
     cat_presentations: 'SLIDES',
     cat_utilities: 'UTILS',
     cat_plugin: 'PLUGIN',
+    borderless_mode: 'Borderless mode (content only)',
+    borderless_mode_desc: 'Hide the toolbar and status bar',
+    enter_borderless: 'Borderless window',
+    exit_borderless: 'Exit borderless mode',
   },
   zh: {
     app_title: 'Peekit',
@@ -432,6 +440,10 @@ export const translations = {
     cat_presentations: '演示',
     cat_utilities: '工具',
     cat_plugin: '插件',
+    borderless_mode: '无边框模式（仅内容）',
+    borderless_mode_desc: '隐藏顶部工具栏和状态栏',
+    enter_borderless: '无边框窗口',
+    exit_borderless: '退出无边框模式',
   }
 };
 

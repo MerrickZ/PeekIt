@@ -42,6 +42,7 @@
     autoplayMedia: true,
     volume: 0.8,
     stayOnTop: false,
+    borderlessMode: false,
   };
 
   let unlistenPreview: (() => void) | null = null;
@@ -115,6 +116,11 @@
     if (res !== null && typeof res === 'boolean') {
       isMaximized = res;
     }
+  }
+
+  async function toggleBorderless() {
+    settings = { ...settings, borderlessMode: !settings.borderlessMode };
+    await invokeTauri('save_app_config', { config: settings });
   }
 
   async function checkMaximizeState() {
@@ -316,7 +322,61 @@
   });
 </script>
 
-<main class="quicklook-window">
+<main class="quicklook-window" class:borderless={settings.borderlessMode}>
+  <!-- Borderless mode: hover-revealed floating strip (drag + essential actions) -->
+  {#if settings.borderlessMode}
+    <div class="borderless-strip" data-tauri-drag-region title={t('drag_window', settings.language)}>
+      <div class="strip-actions">
+        {#if currentFile}
+          <button
+            class="action-btn icon-only {isPinned ? 'pinned' : ''}"
+            on:click={togglePin}
+            title={isPinned ? t('unpin_window', settings.language) : t('pin_window', settings.language)}
+          >
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="17" x2="12" y2="22" />
+              <path d="M5 17h14v-2l-2-3V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7l-2 3v2z" />
+            </svg>
+          </button>
+        {/if}
+        <button
+          class="action-btn icon-only"
+          on:click={toggleMaximize}
+          title={isMaximized ? t('restore', settings.language) : t('maximize', settings.language)}
+        >
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="4" y="4" width="16" height="16" rx="2" />
+          </svg>
+        </button>
+        <button
+          class="action-btn icon-only"
+          on:click={() => { settingsInitialTab = 'general'; settingsInitialSubtab = 'installed'; isSettingsOpen = true; }}
+          title={t('settings', settings.language)}
+        >
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+        </button>
+        <button
+          class="action-btn icon-only"
+          on:click={toggleBorderless}
+          title={t('exit_borderless', settings.language)}
+        >
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <line x1="3" y1="9" x2="21" y2="9" />
+          </svg>
+        </button>
+        <button class="action-btn icon-only close-btn" on:click={closeWindow} title={t('close', settings.language)}>
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  {:else}
   <!-- Window Top Bar (Fluent Custom Titlebar) -->
   <header class="topbar" data-tauri-drag-region>
     <div class="file-title-group">
@@ -426,6 +486,17 @@
         {/if}
       </button>
 
+      <button
+        class="action-btn icon-only"
+        on:click={toggleBorderless}
+        title={t('enter_borderless', settings.language)}
+        aria-label={t('enter_borderless', settings.language)}
+      >
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="4 2.5" />
+        </svg>
+      </button>
+
       <button class="action-btn icon-only" on:click={() => { settingsInitialTab = 'general'; settingsInitialSubtab = 'installed'; isSettingsOpen = true; }} title={t('settings', settings.language)}>
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="3" />
@@ -441,6 +512,7 @@
       </button>
     </div>
   </header>
+  {/if}
 
   <!-- Central Dynamic Viewer Body -->
   <section class="viewer-body">
@@ -486,6 +558,7 @@
   </section>
 
   <!-- Status Bar -->
+  {#if !settings.borderlessMode}
   <footer class="statusbar">
     <div class="status-left">
       {#if currentFile}
@@ -504,6 +577,7 @@
       <span class="shortcut-desc">{t('close', settings.language)}</span>
     </div>
   </footer>
+  {/if}
 
   <!-- Preferences Modal -->
   {#if isSettingsOpen}
@@ -520,6 +594,7 @@
 
 <style>
   .quicklook-window {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -529,6 +604,48 @@
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-elevation);
     overflow: hidden;
+  }
+
+  /* Borderless mode: strip window chrome, show content only */
+  .quicklook-window.borderless {
+    border: none;
+    box-shadow: none;
+  }
+
+  .borderless-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 16px;
+    z-index: 500;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
+
+  .strip-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+
+  .borderless-strip:hover .strip-actions,
+  .borderless-strip:focus-within .strip-actions {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .strip-actions .action-btn {
+    padding: 4px;
   }
 
   .topbar {

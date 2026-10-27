@@ -75,6 +75,7 @@ export interface AppSettings {
   stayOnTop: boolean;
   auto_check_updates?: boolean;
   disabledPlugins?: string[];
+  borderlessMode?: boolean;
 }
 
 export interface UpdateCheckResult {
